@@ -1,0 +1,8 @@
+Required link:
+/api/fetchMedDetails/
+
+
+Required JSON : 
+{
+    "medicineName":"Olworm 400mg Tablet"
+}
