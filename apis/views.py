@@ -7,13 +7,34 @@ from rest_framework.response import *
 from rest_framework import status
 # Create your views here.
 
-
+#this code is optimised with the use of concept of indexing in mysql.
 class FetchMeds(APIView):
     def get(self,request):
         medicineName = request.data.get("medicineName")
-        obj = Meds.objects.filter(sku_name=medicineName)
-        if(len(obj)==0):
-            return Response({"message":"no data found","data":None},status=status.HTTP_404_NOT_FOUND)
-        resp = list()
-        data = MedsSerializer(obj,many=True)
-        return Response({"message":"data found","data":data.data},status=status.HTTP_200_OK)
+        medsArray = medicineName.split(" ")
+        resp = {}
+        
+        for med in medsArray:
+            obj = Meds.objects.filter(sku_name__contains=med)
+            if(len(obj)==0):
+                pass
+            else:
+                print("else")
+                for data in list(obj.iterator()):
+                    d={
+                        "sku_id":data.sku_id, 
+                        "product_id":data.product_id, 
+                        "sku_name":data.sku_name, 
+                        "price":data.price,
+                        "manufacturer_name":data.manufacturer_name, 
+                        "salt_name":data.salt_name, 
+                        "drug_form":data.drug_form, 
+                        "Pack_size":data.Pack_size, 
+                        "strength":data.strength, 
+                        "product_banned_flag":data.product_banned_flag, 
+                        "unit":data.unit, 
+                        "price_per_unit":data.price_per_unit
+                    }
+                    resp[d["sku_id"]]=d
+                
+        return Response({"message":"data found","data":resp.values()},status=status.HTTP_200_OK)

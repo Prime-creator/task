@@ -5,7 +5,7 @@ from datetime import datetime
 class Meds(models.Model):
     sku_id=models.IntegerField(null=True)
     product_id=models.IntegerField(null=True)
-    sku_name=models.CharField(null=True,max_length=100)
+    sku_name=models.CharField(null=True,max_length=100,db_index=True)
     price=models.FloatField(null=True)
     manufacturer_name=models.CharField(null=True,max_length=100)
     salt_name=models.CharField(null=True,max_length=100)
